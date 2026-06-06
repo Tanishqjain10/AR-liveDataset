@@ -1,0 +1,9 @@
+data/portfolio.db
+__pycache__/
+*.py[cod]
+.env
+.streamlit/secrets.toml
+*.egg-info/
+dist/
+build/
+.DS_Store
