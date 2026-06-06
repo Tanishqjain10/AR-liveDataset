@@ -3,7 +3,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Iterable
 
-DB_PATH = Path("data/portfolio.db")
+DB_PATH = Path("/tmp/portfolio.db")
 
 SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS funds (
@@ -156,9 +156,21 @@ CREATE TABLE IF NOT EXISTS data_quality (
 
 def get_conn():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+
+    conn = sqlite3.connect(
+        DB_PATH,
+        check_same_thread=False,
+        timeout=30
+    )
+
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
+
+    try:
+        conn.execute("PRAGMA journal_mode=DELETE")
+        conn.execute("PRAGMA synchronous=NORMAL")
+    except Exception as e:
+        print("SQLite warning:", e)
+
     return conn
 
 
