@@ -15,13 +15,20 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 from modules.benchmark import (
-    compute_benchmark_returns
-    get_benchmark_df
-    get_flow_trend
-    compute_overlap_matrix
+    compute_benchmark_returns,
+    get_benchmark_df,
+    fetch_nifty_history,
+    store_nifty_history
 )
+
 from modules.database import init_db, read_sql
-from modules.flows import get_flow_trend, get_flows, get_flows_for_scheme
+
+from modules.flows import (
+    get_flow_trend,
+    get_flows,
+    get_flows_for_scheme,
+)
+
 from modules.holdings import (
     compute_overlap_matrix,
     get_all_holdings_latest,
