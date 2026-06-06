@@ -6,20 +6,33 @@ from .database import bulk_upsert, read_sql
 
 def fetch_nifty_history() -> pd.DataFrame:
     try:
-        t = yf.Ticker("^NSEI")
-        hist = t.history(period="max", auto_adjust=False)
+        hist = yf.download(
+            "^NSEI",
+            period="max",
+            progress=False,
+            auto_adjust=False
+        )
+
         if hist is None or hist.empty:
             return pd.DataFrame()
+
         hist = hist.reset_index()
-        hist.columns = [str(c[0]).lower().replace(" ", "_") if isinstance(c, tuple) else str(c).lower().replace(" ", "_") for c in hist.columns]
-        if "date" not in hist.columns and "datetime" in hist.columns:
-            hist["date"] = hist["datetime"]
+
+        hist.columns = [
+            str(c).lower().replace(" ", "_")
+            for c in hist.columns
+        ]
+
         hist["benchmark_name"] = "Nifty 50"
         hist["benchmark_symbol"] = "^NSEI"
         hist["source"] = "Yahoo Finance"
+
         hist["date"] = pd.to_datetime(hist["date"]).dt.date.astype(str)
+
         return hist
-    except Exception:
+
+    except Exception as e:
+        print("NIFTY ERROR:", e)
         return pd.DataFrame()
 
 
