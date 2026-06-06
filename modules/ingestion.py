@@ -284,6 +284,11 @@ def ingest_schemes(urls: list[str]):
             nav_data = fetch_mfapi_latest(s.scheme_code)
             hist_data = fetch_mfapi_history(s.scheme_code)
 
+            print("================================")
+            print("Scheme Code:", s.scheme_code)
+            print("NAV Data:", nav_data)
+            print("History Data Exists:", hist_data is not None)
+
             latest_nav, latest_nav_date = None, None
             if nav_data and isinstance(nav_data, dict):
                 d = nav_data.get("data", nav_data)
